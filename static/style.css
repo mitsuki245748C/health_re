@@ -1,0 +1,206 @@
+/* General Body Styles */
+body {
+   font-family: 'Segoe UI', Arial, sans-serif;
+   background-color: #f0f2f5; /* 背景の淡いグレー */
+   margin: 0;
+   padding: 0;
+   display: flex;
+   justify-content: center; /* 中央寄せ */
+   align-items: flex-start; /* 上端に揃える */
+   min-height: 100vh; /* 画面いっぱいの高さ */
+   color: #333; /* 基本の文字色 */
+}
+
+/* Overall Container for the App Layout */
+.app-container {
+   display: flex; /* Flexboxでサイドバーとメインコンテンツを横並びにする */
+   width: 100%;
+   max-width: 1200px; /* アプリ全体の最大幅 */
+   margin: 20px; /* 外側の余白 */
+   border: 1px solid #ccc; /* アプリ全体の枠線 */
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 影 */
+   background-color: #fff; /* アプリ全体の背景色 */
+   min-height: calc(100vh - 40px); /* 画面の高さから上下のmarginを引いた高さ */
+   border-radius: 8px; /* 角を丸くする */
+   overflow: hidden; /* 子要素がはみ出さないように */
+}
+
+/* Left Navigation Bar (サイドバー) */
+.sidebar {
+   width: 200px; /* サイドバーの固定幅 */
+   background-color: #e0e0e0; /* サイドバーのグレー背景 */
+   padding: 20px 0;
+   display: flex;
+   flex-direction: column; /* 要素を縦に並べる */
+   align-items: center; /* 中央揃え */
+   border-right: 1px solid #ccc; /* 右側の区切り線 */
+}
+
+.sidebar h1 {
+   font-size: 20px;
+   color: #333;
+   margin-bottom: 30px;
+   padding: 0 20px;
+   width: 100%;
+   box-sizing: border-box;
+   text-align: center;
+}
+
+.nav-button {
+   display: block;
+   width: 80%; /* ボタンの幅 */
+   padding: 15px 0;
+   margin-bottom: 10px;
+   background-color: #f0f0f0; /* ボタンの背景色 */
+   border: 1px solid #bbb; /* ボタンの枠線 */
+   text-align: center;
+   text-decoration: none;
+   color: #555;
+   font-size: 18px;
+   font-weight: bold;
+   border-radius: 5px; /* ボタンの角丸 */
+   transition: background-color 0.3s, color 0.3s; /* ホバー時のアニメーション */
+}
+
+.nav-button:hover {
+   background-color: #d0d0d0;
+   color: #222;
+}
+
+.nav-button.active { /* アクティブなボタンのスタイル */
+   background-color: #c0c0c0;
+   color: #000;
+   border: 2px solid #999;
+   border-radius: 4px;
+}
+
+/* Main Content Area (メインコンテンツ) */
+.main-content {
+   flex-grow: 1; /* 残りのスペースを全て占める */
+   padding: 20px 30px; /* 上下左右のパディング */
+   background-color: #ffffff;
+}
+
+/* Header within Main Content (日付、ユーザー名、ログアウトボタンのバー) */
+.header-bar {
+   display: flex; /* 要素を横並びにする */
+   justify-content: space-between; /* 左右に配置 */
+   align-items: center; /* 垂直方向中央揃え */
+   padding-bottom: 15px;
+   border-bottom: 1px solid #eee; /* 下部の区切り線 */
+   margin-bottom: 25px;
+}
+
+.header-info {
+   font-size: 16px;
+   color: #555;
+   margin-right: 20px; /* 情報間のスペース */
+}
+
+.logout-button {
+   background-color: #007bff; /* 青色のボタン */
+   color: white;
+   padding: 8px 15px;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   font-size: 14px;
+   transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+   background-color: #0056b3;
+}
+
+/* Data Display Boxes (歩数、目標、連続記録の表示ボックス) */
+.data-section {
+   margin-bottom: 30px;
+}
+
+.data-label {
+   font-size: 16px;
+   color: #666;
+   margin-bottom: 8px; /* ラベルとボックスの間隔 */
+   display: block; /* ブロック要素にして改行 */
+   font-weight: bold; /* ラベルを太字に */
+}
+
+.data-box {
+   border: 1px solid #ccc;
+   padding: 15px 20px; /* パディング */
+   margin-bottom: 20px;
+   background-color: #f9f9f9; /* ボックスの背景色 */
+   border-radius: 8px; /* 角丸 */
+   display: flex; /* 要素を横並びにする */
+   justify-content: space-between; /* 内容と編集ボタンを左右に配置 */
+   align-items: center; /* 垂直方向中央揃え */
+   min-height: 80px; /* ボックスの最小高さ */
+}
+
+.data-box p {
+   margin: 0;
+   font-size: 28px; /* 数字のフォントサイズ */
+   font-weight: bold;
+   color: #333;
+}
+
+.edit-button {
+   background-color: #6c757d; /* 編集ボタンのグレー */
+   color: white;
+   padding: 6px 12px;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   font-size: 14px;
+   transition: background-color 0.3s;
+}
+
+.edit-button:hover {
+   background-color: #5a6268;
+}
+
+/* Specific styling for the bottom "連続記録" box (連続記録のボックス) */
+.continuous-record-box {
+   background-color: #f9f9f9;
+   border: 1px solid #ccc;
+   padding: 15px 20px;
+   border-radius: 8px;
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-end; /* 編集ボタンを下端に揃える */
+   min-height: 80px;
+}
+
+.continuous-record-box p {
+   font-size: 36px; /* 連続記録の数字を大きく */
+   font-weight: bold;
+   color: #333;
+   margin: 0;
+   line-height: 1; /* 余分な行の高さを削除 */
+}
+
+.modal {
+  display: none; /* 最初は非表示 */
+  position: fixed;
+  z-index: 10;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 300px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 10px; top: 5px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}

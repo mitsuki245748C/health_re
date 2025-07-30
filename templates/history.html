@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歩数履歴</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='shared.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <h1>健やか康くん</h1>
+            <a href="{{ url_for('index') }}" class="nav-button">ホーム</a>
+            <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者管理</a>
+            <a href="{{ url_for('ranking_show')}}" class="nav-button">今日の順位表</a>
+            <a href="{{ url_for('view_history')}}" class="nav-button active">歩数履歴表示</a> {# このページがアクティブなのでactiveクラスを付与 #}
+            {% if user and user.username in ['mitsuo', 'gento', 'shun', 'kouga'] %}
+                <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">利用者情報一覧表示</a>
+            {% endif %}
+        </div>
+
+        
+            <div class="history-container">
+                <h1>歩数履歴</h1>
+                {% if message %}
+                    <p class="no-records-message">{{ message }}</p> {# CSSクラスを追加 #}
+                {% else %}
+                    <h2>過去の記録</h2>
+                    <table class="ranking-table"> {# ranking-tableクラスを流用、またはhistory-tableを作成しても良い #}
+                        <thead>
+                            <tr>
+                                <th>日付</th>
+                                <th>歩数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                                <tr>
+                                    <td>{{ record.date.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ record.steps }} 歩</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <h2>歩数の推移グラフ</h2>
+                    {% if img_data %}
+                        <div class="chart-container"> {# グラフを囲むコンテナを追加 #}
+                            <img src="data:image/png;base64,{{ img_data }}" alt="歩数グラフ">
+                        </div>
+                    {% else %}
+                        <p class="no-records-message">グラフデータがありません。</p> {# CSSクラスを追加 #}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日の歩数ランキング</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='shared.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <h1>健やか康くん</h1>
+            <a href="{{ url_for('index') }}" class="nav-button">ホーム</a>
+            <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者管理</a>
+            <a href="{{ url_for('ranking_show')}}" class="nav-button active">今日の順位表</a> {# このページがアクティブなのでactiveクラスを付与 #}
+            <a href="{{ url_for('view_history')}}" class="nav-button">歩数履歴表示</a>
+            {% if user and user.username in ['mitsuo', 'gento', 'shun', 'kouga'] %}
+                <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">利用者情報一覧表示</a>
+            {% endif %}
+        </div>
+
+        <div class="main-content">
+            <div class="ranking-container"> {# ranking-containerクラスを追加 #}
+                <h1>今日の歩数ランキング ({{ today.strftime('%Y年%m月%d日') }})</h1>
+
+                {% if ranking_data %}
+                    <table class="ranking-table"> {# ranking-tableクラスを追加 #}
+                        <thead>
+                            <tr>
+                                <th>順位</th>
+                                <th>ユーザー名</th>
+                                <th>歩数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in ranking_data %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ entry.username }}</td>
+                                <td>{{ entry.steps }} 歩</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-records-message">本日まだ歩数記録がありません。</p> {# no-records-messageクラスを追加 #}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,353 @@
+/* static/shared_app_style.css */
+
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f2f5; /* 背景の淡いグレー */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* 中央寄せ */
+    align-items: flex-start; /* 上端に揃える */
+    min-height: 100vh; /* 画面いっぱいの高さ */
+    color: #333; /* 基本の文字色 */
+}
+
+/* Overall Container for the App Layout */
+.app-container {
+    display: flex; /* Flexboxでサイドバーとメインコンテンツを横並びにする */
+    width: 100%;
+    max-width: 1200px; /* アプリ全体の最大幅 */
+    margin: 20px; /* 外側の余白 */
+    border: 1px solid #ccc; /* アプリ全体の枠線 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 影 */
+    background-color: #fff; /* アプリ全体の背景色 */
+    min-height: calc(100vh - 40px); /* 画面の高さから上下のmarginを引いた高さ */
+    border-radius: 8px; /* 角を丸くする */
+    overflow: hidden; /* 子要素がはみ出さないように */
+}
+
+/* Left Navigation Bar (サイドバー) */
+.sidebar {
+    width: 200px; /* サイドバーの固定幅 */
+    background-color: #e0e0e0; /* サイドバーのグレー背景 */
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column; /* 要素を縦に並べる */
+    align-items: center; /* 中央揃え */
+    border-right: 1px solid #ccc; /* 右側の区切り線 */
+    flex-shrink: 0; /* 縮まないようにする */
+}
+
+.sidebar h1 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.nav-button {
+    display: block;
+    width: 80%; /* ボタンの幅 */
+    padding: 15px 0;
+    margin-bottom: 10px;
+    background-color: #f0f0f0; /* ボタンの背景色 */
+    border: 1px solid #bbb; /* ボタンの枠線 */
+    text-align: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px; /* ボタンの角丸 */
+    transition: background-color 0.3s, color 0.3s; /* ホバー時のアニメーション */
+}
+
+.nav-button:hover {
+    background-color: #d0d0d0;
+    color: #222;
+}
+
+.nav-button.active { /* アクティブなボタンのスタイル */
+    background-color: #c0c0c0;
+    color: #000;
+    border: 2px solid #999;
+    border-radius: 4px;
+}
+
+/* Main Content Area (メインコンテンツ) */
+.main-content {
+    flex-grow: 1; /* 残りのスペースを全て占める */
+    padding: 20px 30px; /* 上下左右のパディング */
+    background-color: #ffffff;
+    display: flex; /* 子要素を中央寄せするため */
+    flex-direction: column;
+    align-items: center; /* 水平方向中央寄せ */
+}
+
+/* Header within Main Content (日付、ユーザー名、ログアウトボタンのバー) */
+.header-bar {
+    display: flex; /* 要素を横並びにする */
+    justify-content: space-between; /* 左右に配置 */
+    align-items: center; /* 垂直方向中央揃え */
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee; /* 下部の区切り線 */
+    margin-bottom: 25px;
+    width: 100%; /* 親要素の幅いっぱいに */
+    max-width: 700px; /* メインコンテンツの幅に合わせる */
+}
+
+.header-info {
+    font-size: 16px;
+    color: #555;
+    margin-right: 20px; /* 情報間のスペース */
+}
+
+.logout-button {
+    background-color: #007bff; /* 青色のボタン */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #0056b3;
+}
+
+/* --- info_change.html 用のスタイル --- */
+.form-container {
+    background-color: #f9f9f9; /* ボックスの背景色 */
+    border: 1px solid #ccc;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; /* フォームの最大幅 */
+    box-sizing: border-box;
+    margin-top: 30px; /* ヘッダーバーからの余白 */
+    text-align: center;
+}
+
+.form-container h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+    width: calc(100% - 22px); /* パディングとボーダーを考慮 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group small {
+    display: block;
+    color: #888;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.submit-button {
+    background-color: #28a745; /* 緑色の更新ボタン */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* --- ranking.html 用のスタイル --- */
+.ranking-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px; /* ランキングテーブルの最大幅 */
+    box-sizing: border-box;
+    margin-top: 30px;
+}
+
+.ranking-container h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.ranking-table th, .ranking-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    font-size: 15px;
+}
+
+.ranking-table th {
+    background-color: #e9ecef; /* ヘッダーの背景色 */
+    color: #333;
+    font-weight: bold;
+}
+
+.ranking-table tr:nth-child(even) { /* 偶数行の背景色 */
+    background-color: #f6f6f6;
+}
+
+.ranking-table tr:hover { /* ホバー時の背景色 */
+    background-color: #e2e6ea;
+}
+
+.no-records-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+/* フラッシュメッセージ */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 500px; /* フォームの幅に合わせる */
+    text-align: center;
+}
+.flashes li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.flashes .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.flashes .success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* --- history.html 用の追加スタイル --- */
+.history-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px; /* 履歴コンテンツの最大幅 */
+    box-sizing: border-box;
+    margin-top: 30px;
+    margin-left: auto;  /* history-container 自体を中央寄せ */
+    margin-right: auto; /* history-container 自体を中央寄せ */
+    /* text-align: center; は子要素のテキストやインライン要素を中央寄せするため、残しておきます */
+    text-align: center;
+}
+
+.history-container h1, .history-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center; /* 見出しは元々中央寄せでした */
+}
+
+/* history-container 内のテーブルを中央寄せ */
+.history-container table { /* .ranking-tableではなく、history-container内のtableに直接適用 */
+    width: 100%; /* 親要素(history-container)の幅いっぱいに */
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: auto;  /* ★ テーブルを中央寄せにする重要な設定 ★ */
+    margin-right: auto;
+}
+
+.history-container th, .history-container td { /* history-container内のth, tdに適用 */
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center; /* 表のセル内のテキストを中央寄せ */
+    font-size: 15px;
+}
+
+.history-container th {
+    background-color: #e9ecef;
+    color: #333;
+    font-weight: bold;
+}
+
+.history-container tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+
+.history-container tr:hover {
+    background-color: #e2e6ea;
+}
+
+
+/* グラフを中央に表示するためのコンテナ */
+.chart-container {
+    text-align: center; /* グラフ画像自体はインライン要素なのでこれで中央寄せ */
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-container img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    /* ★★★ ここも追加 ★★★ */
+    display: block; /* imgをブロック要素にしてmargin: auto;を有効にする */
+    margin-left: auto;
+    margin-right: auto;
+}

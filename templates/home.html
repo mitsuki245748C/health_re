@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>HOME</title>
+   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app-container">
+   <div class="sidebar">
+       <h1>健やか康くん</h1>
+       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+       <p href="#" class="nav-button active">ホーム</p>
+       <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者管理</a>
+       <a href="{{ url_for('ranking_show')}}" class="nav-button">今日の順位表</a>
+       <a href="{{ url_for('view_history')}}" class="nav-button">歩数履歴表示</a>
+        {% if user and user.username in ['mitsuo', 'gento', 'shun', 'kouga'] %}
+           <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">利用者情報一覧表示</a>
+        {% endif %}
+   </div>
+
+   <div class="main-content">
+       <div class="header-bar">
+           <span class="header-info">日付 : {{ today }}</span>
+           <span class="header-info">ユーザー : {{ user.username }}</span>
+           <a href="{{ url_for('logout')}}"><button class="logout-button">ログアウト</button></a>
+       </div>
+
+       <div class="data-section">
+            <!-- 今日の歩数表示 -->
+            <label class="data-label">今日の歩数</label>
+            <div class="data-box">
+            <p id="steps-display">{{ steps }}歩</p>
+            <button class="edit-button" onclick="openModal('steps-modal')">編集</button>
+            </div>
+
+            <!-- 今日の目標歩数表示 -->
+            <label class="data-label">今日の目標歩数</label>
+            <div class="data-box">
+            <p id="goal-display">{{ goal_steps }}歩</p>
+            <button class="edit-button" onclick="openModal('goal-modal')">編集</button>
+            </div>
+
+            <!-- 今週の目標達成連続記録 -->
+            <label class="data-label">今週の目標達成連続記録</label>
+            <div class="continuous-record-box">
+            <p>{{ streak_days }}日</p>
+            </div>
+
+            <!-- 歩数編集用モーダル -->
+            <div id="steps-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('steps-modal')">&times;</span>
+                <form method="POST" action="{{ url_for('update_steps') }}">
+                <label for="steps-input">今日の歩数を入力</label>
+                <input type="number" id="steps-input" name="steps" min="0" value="{{ steps }}" required>
+                <button type="submit">保存</button>
+                </form>
+            </div>
+            </div>
+
+            <!-- 目標歩数編集用モーダル -->
+            <div id="goal-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('goal-modal')">&times;</span>
+                <form method="POST" action="{{ url_for('update_goal') }}">
+                <label for="goal-input">今日の目標歩数を入力</label>
+                <input type="number" id="goal-input" name="goal" min="1" value="{{ goal_steps }}" required>
+                <button type="submit">保存</button>
+                </form>
+            </div>
+            </div>
+       </div>
+   </div>
+</div>
+
+    <script>
+    function openModal(id) {
+    document.getElementById(id).style.display = "block";
+    }
+    function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+    }
+
+    // モーダル外クリックで閉じる処理
+    window.onclick = function(event) {
+    ['steps-modal', 'goal-modal'].forEach(id => {
+        let modal = document.getElementById(id);
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }
+    });
+    }
+    </script>
+
+</body>
+</html>
