@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ログインページ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f2f2f2;
+            padding: 2em;
+        }
+        .login-container {
+            background-color: white;
+            padding: 2em;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.7em;
+            width: 100%;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>ログイン</h2>
+        <form method="POST" action="{{ url_for('login')}}">
+            <label for="username">ユーザー名</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">パスワード</label>
+            <input type="password" id="password" name="password" required>
+
+            <input type="submit" value="ログイン">
+        </form>
+        <div class="register-link">
+            <p>アカウントをお持ちでない方は <a href="/register">新規登録</a></p>
+        </div>
+
+    </div>
+</body>
+</html>
+
