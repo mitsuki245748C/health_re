@@ -11,17 +11,28 @@
         <div class="sidebar">
             <h1>健やか康くん</h1>
             <a href="{{ url_for('index') }}" class="nav-button">ホーム</a>
-            <a href="{{ url_for('user_info_change')}}" class="nav-button active">利用者管理</a> {# このページがアクティブなのでactiveクラスを付与 #}
+            <a href="{{ url_for('user_info_change')}}" class="nav-button active">利用者情報</a> {# このページがアクティブなのでactiveクラスを付与 #}
             <a href="{{ url_for('ranking_show')}}" class="nav-button">今日の順位表</a>
             <a href="{{ url_for('view_history')}}" class="nav-button">歩数履歴表示</a>
             {% if user and user.username in ['mitsuo', 'gento', 'shun', 'kouga'] %}
-                <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">利用者情報一覧表示</a>
+                <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">管理者画面</a>
             {% endif %}
         </div>
 
         <div class="main-content">
             <div class="form-container">
                 <h1>ユーザー情報変更</h1>
+
+                <!-- フラッシュメッセージ -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                {% endwith %}
 
                 <form method="post" action="{{ url_for('user_info_change') }}">
                     <div class="form-group">
@@ -31,16 +42,36 @@
                     </div>
                     <div class="form-group">
                         <label for="height">身長 (cm):</label>
-                        <input type="number" id="height" name="height" step="0.1" value="{{ user.height if user.height is not none else '' }}">
+                        <input type="number" id="height" name="height" step="0.1" min="0" value="{{ user.height if user.height is not none else '' }}">
                     </div>
                     <div class="form-group">
                         <label for="weight">体重 (kg):</label>
-                        <input type="number" id="weight" name="weight" step="0.1" value="{{ user.weight if user.weight is not none else '' }}">
+                        <input type="number" id="weight" name="weight" step="0.1" min="0" value="{{ user.weight if user.weight is not none else '' }}">
                     </div>
                     <div class="form-group">
                         <label for="age">年齢:</label>
-                        <input type="number" id="age" name="age" value="{{ user.age if user.age is not none else '' }}">
+                        <input type="number" id="age" name="age" min="0" value="{{ user.age if user.age is not none else '' }}">
                     </div>
+
+                    {% if user.height and user.weight and user.height > 0 %}
+                        <div class="form-group">
+                            {% set height_m = user.height / 100 %}
+                            {% set bmi = (user.weight / (height_m * height_m)) | round(1) %}
+                             {% if bmi < 18.5 %}
+                                {% set bmi_category = "低体重" %}
+                            {% elif bmi < 25 %}
+                                {% set bmi_category = "普通体重" %}
+                            {% elif bmi < 30 %}
+                                {% set bmi_category = "肥満(1度)" %}
+                            {% elif bmi < 35 %}
+                                {% set bmi_category = "肥満(2度)" %}
+                            {% else %}
+                                {% set bmi_category = "高度肥満" %}
+                            {% endif %}
+                        <p><strong>BMI:</strong> {{ bmi }}（{{ bmi_category }}）</p>
+                        </div>
+                    {% endif %}
+                    
                     <div>
                         <input type="submit" value="更新" class="submit-button"> {# submit-buttonクラスを追加 #}
                     </div>

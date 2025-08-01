@@ -11,11 +11,11 @@
         <div class="sidebar">
             <h1>健やか康くん</h1>
             <a href="{{ url_for('index') }}" class="nav-button">ホーム</a>
-            <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者管理</a>
+            <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者情報</a>
             <a href="{{ url_for('ranking_show')}}" class="nav-button active">今日の順位表</a> {# このページがアクティブなのでactiveクラスを付与 #}
             <a href="{{ url_for('view_history')}}" class="nav-button">歩数履歴表示</a>
             {% if user and user.username in ['mitsuo', 'gento', 'shun', 'kouga'] %}
-                <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">利用者情報一覧表示</a>
+                <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">管理者画面</a>
             {% endif %}
         </div>
 

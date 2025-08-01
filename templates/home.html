@@ -11,11 +11,11 @@
        <h1>健やか康くん</h1>
        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
        <p href="#" class="nav-button active">ホーム</p>
-       <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者管理</a>
+       <a href="{{ url_for('user_info_change')}}" class="nav-button">利用者情報</a>
        <a href="{{ url_for('ranking_show')}}" class="nav-button">今日の順位表</a>
        <a href="{{ url_for('view_history')}}" class="nav-button">歩数履歴表示</a>
         {% if user and user.username in ['mitsuo', 'gento', 'shun', 'kouga'] %}
-           <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">利用者情報一覧表示</a>
+           <a href="{{ url_for('admin_user_list')}}" class="nav-button {% if request.endpoint == 'admin_user_list' %}active{% endif %}">管理者画面</a>
         {% endif %}
    </div>
 
@@ -45,6 +45,25 @@
             <label class="data-label">今週の目標達成連続記録</label>
             <div class="continuous-record-box">
             <p>{{ streak_days }}日</p>
+            </div>
+
+
+            <div style="display: flex; gap: 20px; align-items: center;">
+            <!-- 走行距離 -->
+            <div style="flex: 1;">
+                <label class="data-label">歩行距離</label>
+                <div class="data-box">
+                <p>{{ distance_km }} km</p>
+                </div>
+            </div>
+
+            <!-- 消費カロリー -->
+            <div style="flex: 1;">
+                <label class="data-label">消費カロリー</label>
+                <div class="data-box">
+                <p>{{ calories }} kcal</p>
+                </div>
+            </div>
             </div>
 
             <!-- 歩数編集用モーダル -->
@@ -91,6 +110,29 @@
         }
     });
     }
+    </script>
+
+    <!-- Flash メッセージ（画面下部） -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <script>
+    // フラッシュメッセージを2秒後にフェードアウト
+    setTimeout(() => {
+        const messages = document.querySelectorAll('.flash-message');
+        messages.forEach(msg => {
+        msg.style.transition = 'opacity 1s ease';
+        msg.style.opacity = '0';
+        setTimeout(() => msg.remove(), 1000);  // フェード後に削除
+        });
+    }, 1000);
     </script>
 
 </body>

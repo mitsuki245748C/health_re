@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ログインページ</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             font-family: sans-serif;
@@ -40,7 +41,7 @@
 <body>
     <div class="login-container">
         <h2>ログイン</h2>
-        <form method="POST" action="{{ url_for('login')}}">
+        <form method="POST" action="/">
             <label for="username">ユーザー名</label>
             <input type="text" id="username" name="username" required>
 
@@ -54,6 +55,16 @@
         </div>
 
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages flash-messages-center">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
 </body>
 </html>
 

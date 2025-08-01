@@ -163,6 +163,7 @@ body {
 .continuous-record-box {
    background-color: #f9f9f9;
    border: 1px solid #ccc;
+   margin-bottom: 20px;
    padding: 15px 20px;
    border-radius: 8px;
    display: flex;
@@ -203,4 +204,53 @@ body {
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.flash-messages {
+    position: fixed;
+    bottom: 55px;
+    left: 55%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    max-width: 80%;
+    text-align: center;
+}
+
+.flash-message {
+    background-color: #d1ecf1;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: inline-block;
+    opacity: 1;
+    transition: opacity 1s ease; /* フェード用 */
+}
+
+.flash-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.flash-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.flash-message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* login.html や info_change.html 専用の中央下表示用 */
+.flash-messages-center {
+    position: fixed;
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    max-width: 80%;
+    text-align: center;
+    color: red;
 }

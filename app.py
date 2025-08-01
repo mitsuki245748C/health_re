@@ -57,6 +57,33 @@ def index():
         #今日の歩数と目標を取得
         record = StepRecord.query.filter_by(user_id=user.id, date=today).first()
         goal = StepGoal.query.filter_by(user_id=user.id, date=today).first()
+        
+        bmi = None
+        bmi_category = None
+        if user.height and user.weight and user.height > 0:
+            height_m = user.height / 100  # cm → m
+            bmi = round(user.weight / (height_m ** 2), 1)
+            # 判定カテゴリー
+            if bmi < 18.5:
+                bmi_category = "低体重"
+            elif bmi < 25:
+                bmi_category = "普通体重"
+            elif bmi < 30:
+                bmi_category = "肥満(1度)"
+            elif bmi < 35:
+                bmi_category = "肥満(2度)"
+            else:
+                bmi_category = "高度肥満"
+
+        # 歩幅 = 身長(cm) × 0.45（m換算）で距離計算
+        distance_km = 0
+        calories = 0
+        if user.height and record:
+            stride_m = user.height * 0.45 / 100  # 歩幅（m）
+            distance_km = round(record.steps * stride_m / 1000, 2)  # km
+
+            if user.weight:
+                calories = round(distance_km * user.weight * 1.05, 2)  # kcal
 
         #目標連続達成記録を計算
         records = StepRecord.query.filter_by(user_id=user.id).order_by(StepRecord.date.desc()).all()
@@ -69,19 +96,15 @@ def index():
                 streak += 1
             else:
                 break
-        # メッセージ
-        if streak >= 1:
-            message = f"🌟 目標達成おめでとうございます！現在{streak}日連続で目標達成中です！"
-        else:
-            message = "がんばって歩きましょう！💪"
 
         return render_template('home.html',
                                 user=user,
                                 steps=record.steps if record else 0,
                                 goal_steps=goal.goal_steps if goal else 0,
                                 streak_days=streak,
-                                message=message,
-                                today=today.strftime("%-m月%-d日")
+                                today=today.strftime("%-m月%-d日"),
+                                distance_km=distance_km,
+                                calories=calories
                                )
     return redirect(url_for('login'))
 
@@ -121,21 +144,37 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
+        # 入力値の取得と変換
+        try:
+            height = float(request.form['height'])
+            weight = float(request.form['weight'])
+            age = int(request.form['age'])
+        except ValueError:
+            error_message = '身長・体重・年齢は数値で入力してください。'
+            return render_template('register.html', error_message=error_message, form_data=request.form)
+
+        # 入力値バリデーション
+        if height <= 0 or weight <= 0 or age <= 0:
+            error_message = '身長・体重・年齢はすべて0より大きい値を入力してください。'
+            return render_template('register.html', error_message=error_message, form_data=request.form)
+
+        # ユーザー名の重複確認
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             error_message = 'そのユーザー名はすでに登録されています。別のユーザー名をお試しください。'
-            return render_template('register.html',error_message=error_message,form_data=request.form)
+            return render_template('register.html', error_message=error_message, form_data=request.form)
 
-        password = generate_password_hash(request.form['password'])
-        height = float(request.form['height'])
-        weight = float(request.form['weight'])
-        age = int(request.form['age'])
-        user = User(username=username, password_hash=password, height=height, weight=weight,age=age)
+        # 登録処理
+        password_hash = generate_password_hash(password)
+        user = User(username=username, password_hash=password_hash,
+                    height=height, weight=weight, age=age)
         db.session.add(user)
         db.session.commit()
-        flash('登録が完了しました')
+        flash('登録が完了しました', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html',error_message=error_message,form_data=request.form)
+
+    return render_template('register.html', error_message=error_message, form_data=request.form)
+
 
 # ログイン
 @app.route('/', methods=['GET', 'POST'])
@@ -146,9 +185,11 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             session['user_id'] = user.id
-            return redirect(url_for('index'))
-        flash('ログイン失敗')
+            flash('ログインに成功しました', 'success')  # ← 追加（成功メッセージ）
+            return redirect(url_for('index'))  # ここで index に遷移
+        flash('ユーザー名またはパスワードが違います', 'error')  # ← カテゴリも追加
     return render_template('login.html')
+
 
 # ログアウト
 @app.route('/logout')
@@ -237,7 +278,7 @@ def view_history():
     records = StepRecord.query.filter_by(user_id=user_id).order_by(StepRecord.date).all()
 
     if not records:
-        return render_template('history.html', message="記録がありません。")
+        return render_template('history.html', message="記録がありません。", user=user)
 
     # グラフ作成
     dates = [record.date for record in records]
@@ -245,100 +286,11 @@ def view_history():
 
     plt.figure(figsize=(10, 4))
     plt.plot(dates, steps, marker='o', linestyle='-', color='green')
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # 1日おき
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))  # 月日表示
     plt.xticks(rotation=45)
     plt.xlabel("日付")
     plt.ylabel("歩数")
     plt.title("歩数の推移")
     plt.tight_layout()
-
-    # グラフ画像を base64 にエンコード
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    img_data = base64.b64encode(img.getvalue()).decode()
-
-    plt.close()
-
-    return render_template('history.html', records=records, img_data=img_data,user=user)
-
-@app.route('/info_change',methods=['GET','POST'])
-def user_info_change():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    user = db.session.get(User, session['user_id'])
-    if user is None:
-        session.pop('user_id', None)
-        flash('ログイン状態が無効です。再度ログインしてください。', 'error')
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        # フォームから新しい情報を取得
-        # 受け取る値が空文字列の場合に備えて、float()やint()に渡す前にチェック
-        new_height_str = request.form['height']
-        new_weight_str = request.form['weight']
-        new_age_str = request.form['age']
-
-        # 身長、体重、年齢が入力されていれば更新、そうでなければ現在の値を維持
-        if new_height_str:
-            try:
-                user.height = float(new_height_str)
-            except ValueError:
-                flash('身長は正しい数値を入力してください。', 'error')
-                return render_template('info_change.html', user=user)
-        
-        if new_weight_str:
-            try:
-                user.weight = float(new_weight_str)
-            except ValueError:
-                flash('体重は正しい数値を入力してください。', 'error')
-                return render_template('info_change.html', user=user)
-
-        if new_age_str:
-            try:
-                user.age = int(new_age_str)
-            except ValueError:
-                flash('年齢は正しい整数を入力してください。', 'error')
-                return render_template('info_change.html', user=user)
-        
-        # データベースにコミット
-        db.session.commit()
-        return redirect(url_for('index')) # 変更後にホーム画面へリダイレクト
-
-    # GETリクエストの場合、現在のユーザー情報をフォームに表示するためにテンプレートをレンダリング
-    return render_template('info_change.html', user=user)
-
-#ランキング表示
-@app.route('/ranking',methods=['GET'])
-def ranking_show():
-    user = db.session.get(User, session['user_id'])
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    # 今日の日付取得
-    today = date.today()
-    # 今日の全ユーザーの歩数データを取得し、歩数を多い順に
-    # step_recordとuserテーブルを結合して、ユーザー名も取得できるようにする
-    # filter_byで今日の日付に絞り込む
-    # order_byで歩数を降順に並べ替える
-    # .all()で全てのレコードを取得
-    ranking_data = db.session.query(
-        User.username,
-        StepRecord.steps
-    ).join(StepRecord,User.id == StepRecord.user_id).filter(
-        StepRecord.date == today
-    ).order_by(
-        StepRecord.steps.desc()
-    ).all()
-
-    return render_template('ranking.html', ranking_data=ranking_data,today=today,user=user)
-
-
-# HTMLファイルの提供
-@app.route('/<page>.html')
-def render_html(page):
-    return render_template(f"{page}.html")
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
